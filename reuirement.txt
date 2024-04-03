@@ -1,0 +1,8 @@
+streamlit
+plotly.express
+pandas
+warnings
+plotly
+make_subplots
+matplotlib.pyplot
+plotly.graph_objects
