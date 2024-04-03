@@ -1,11 +1,12 @@
 import streamlit as st
+import plotyly
 import plotly.express as px
 import pandas as pd
 import warnings
-warnings.filterwarnings('ignore')
 from plotly.subplots import make_subplots
-import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+
+warnings.filterwarnings('ignore')
 
 
 st.set_page_config(page_title="Electronic ecommerce store", page_icon=":bar_chart:")
