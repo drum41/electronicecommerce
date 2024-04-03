@@ -2,5 +2,6 @@ streamlit
 plotly-express
 pandas
 warnings
+plotly-subplots
 make_subplots
 plotly-graph_objects
