@@ -4,5 +4,4 @@ plotly-express
 pandas
 warnings
 make_subplots
-matplotlib-pyplot
 plotly-graph_objects
