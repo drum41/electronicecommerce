@@ -1,5 +1,5 @@
 import streamlit as st
-import plotyly
+import plotly
 import plotly.express as px
 import pandas as pd
 import warnings
