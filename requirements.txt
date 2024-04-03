@@ -1,7 +1,4 @@
 streamlit
-plotly-express
+plotly
 pandas
 warnings
-plotly-subplots
-make_subplots
-plotly-graph_objects
