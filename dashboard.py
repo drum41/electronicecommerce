@@ -19,16 +19,18 @@ if fl is not None:
     st.write(filename)
     df = pd.read_csv(filename, encoding = "ISO-8859-1")
 else:
-    df = pd.read_csv("sampled_data.csv", encoding = "ISO-8859-1")
+    df = pd.read_csv("C:\\Users\\KOMPA\\Desktop\\python\\sampled_data.csv", encoding = "ISO-8859-1")
 
 
-
+df['Number of sales'] = 1
 
 ######### ------------------------------------ FILTER ----------------------------------------------------- #########
 df = pd.DataFrame(df)
 df['event_time'] = pd.to_datetime(df['event_time'])
 # Filter data for year 2020 and remove potential incorrect timestamps
 df = df[(df['event_time'].dt.year == 2020) & (df['event_time'] != '1970-01-01')]
+
+
 
 col1, col2 = st.columns((2))
 df["event_time"] = pd.to_datetime(df["event_time"])
@@ -112,15 +114,19 @@ st.markdown("---")
 df_ts = filtered_df.groupby(df['event_time'].dt.date)['price'].sum().reset_index()
 fig_ts = px.area(df_ts, x='event_time', y='price', title='Total Sales Over Time')
 
-####################  Category Sales Chart with sorting
+# Calculate the total sales by category
 df_category = filtered_df.groupby('Category')['price'].sum().reset_index()
 df_category = df_category.sort_values(by='price', ascending=False)
 
-# Number of product sales
+# Calculate the number of sales by category
 df_category_prod_count = filtered_df.groupby('Category')['order_id'].count().reset_index()
-df_category_prod_count.rename(columns={'order_id': 'Number of Sales'}, inplace=True)
+df_category_prod_count = df_category_prod_count.set_index('Category').loc[df_category['Category']].reset_index()
 
-# Combine the two charts into a single figure
+# Calculate the AOV by category
+df_category_aov = filtered_df.groupby('Category')['price'].mean().reset_index()
+df_category_aov = df_category_aov.set_index('Category').loc[df_category['Category']].reset_index()
+
+# Combine the two charts into a single figure with secondary y-axis enabled
 fig_category_combo = make_subplots(specs=[[{"secondary_y": True}]])
 
 # Add bar chart for the primary y-axis
@@ -128,32 +134,52 @@ fig_category_combo.add_trace(
     go.Bar(x=df_category['Category'], y=df_category['price'], name='Sales', text=df_category['price']),
     secondary_y=False,
 )
+
 # Add line chart for the secondary y-axis (Number of Sales)
 fig_category_combo.add_trace(
     go.Scatter(
         x=df_category['Category'],
-        y=df_category_prod_count['Number of Sales'],
+        y=df_category_prod_count['order_id'],
         name='Number of Sales',
         mode='lines+markers'
     ),
-    secondary_y=True
+    secondary_y=True,
+)
+
+# Add line chart for the secondary y-axis (AOV)
+fig_category_combo.add_trace(
+    go.Scatter(
+        x=df_category_aov['Category'],
+        y=df_category_aov['price'],
+        name='AOV',
+        mode='lines+markers',
+        yaxis='y2'  # Ensure this is linked to the secondary y-axis
+    ),
+    secondary_y=True,
 )
 
 # Update layout to include both y-axes and titles
 fig_category_combo.update_layout(
-    title='Sales Distribution by Category with Line Chart of Number of Sales',
+    title='Sales Distribution by Category with Line Chart of Number of Sales and AOV',
     xaxis_title='Category',
     yaxis_title='Sales ($)',
-    yaxis2_title='Number of Sales',
+    yaxis2_title='Number of Sales & AOV',
 )
 
 # Set y-axis to start from zero
-fig_category_combo.update_yaxes(title_text="Sales ($)", secondary_y=False, range=[0, max(df_category['price'])])
-fig_category_combo.update_yaxes(title_text="Number of Sales", secondary_y=True, range=[0, max(df_category_prod_count['Number of Sales'])])
+fig_category_combo.update_yaxes(title_text="Sales ($)", secondary_y=False, showgrid=False, range=[0, max(df_category['price'])])
+
+# Update secondary y-axis range if necessary to include both Number of Sales and AOV
+# You might need to adjust this manually to get a meaningful chart
+max_number_of_sales = max(df_category_prod_count['order_id'])
+max_aov = max(df_category_aov['price'])
+max_secondary_axis = max(max_number_of_sales, max_aov)
+
+fig_category_combo.update_yaxes(title_text="Number of Sales & AOV", secondary_y=True, showgrid=False, range=[0, max_secondary_axis])
 
 # Update the hover template for the line chart
 fig_category_combo['data'][1].update(hovertemplate='Number of Sales: %{y}')
-####################  Category Sales Chart with sorting
+fig_category_combo['data'][2].update(hovertemplate='AOV: %{y}')
 
 
 st.plotly_chart(fig_ts,use_container_width=True)
