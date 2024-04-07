@@ -4,11 +4,11 @@ import pandas as pd
 import warnings
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-st.set_page_config(layout="wide")
+
 warnings.filterwarnings('ignore')
 
 
-st.set_page_config(page_title="Electronic ecommerce store", page_icon=":bar_chart:")
+st.set_page_config(page_title="Electronic ecommerce store", page_icon=":bar_chart:", layout="wide")
 
 st.title(":bar_chart: Electronic ecommerce store")
 st.markdown('<style>div.block-container{padding-top:1rem;}</style>',unsafe_allow_html=True)
