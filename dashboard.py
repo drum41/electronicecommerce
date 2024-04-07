@@ -4,7 +4,7 @@ import pandas as pd
 import warnings
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-
+st.set_page_config(layout="wide")
 warnings.filterwarnings('ignore')
 
 
