@@ -19,10 +19,8 @@ if fl is not None:
     st.write(filename)
     df = pd.read_csv(filename, encoding = "ISO-8859-1")
 else:
-    df = pd.read_csv("C:\\Users\\KOMPA\\Desktop\\python\\sampled_data.csv", encoding = "ISO-8859-1")
+    df = pd.read_csv("sampled_data.csv", encoding = "ISO-8859-1")
 
-
-df['Number of sales'] = 1
 
 ######### ------------------------------------ FILTER ----------------------------------------------------- #########
 df = pd.DataFrame(df)
