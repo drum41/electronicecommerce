@@ -19,7 +19,7 @@ if fl is not None:
     st.write(filename)
     df = pd.read_csv(filename, encoding = "ISO-8859-1")
 else:
-    df = pd.read_csv("electronicecommerce/final_data.csv", encoding = "ISO-8859-1")
+    df = pd.read_csv("final_data.csv", encoding = "ISO-8859-1")
 
 
 ######### ------------------------------------ FILTER ----------------------------------------------------- #########
